@@ -1,0 +1,816 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F1117;--surf:#181B24;--surf2:#1E2130;--brd:#2A2D3A;
+  --tx:#E8EAF0;--mt:#8B8FA8;--ac:#4F8EF7;
+  --gr:#34C77B;--am:#F5A623;--rd:#E84545;--pu:#A875F7;--cy:#2DD4BF;
+  --rad:8px;--f:'IBM Plex Mono',monospace
+}
+body{background:var(--bg);color:var(--tx);font-family:var(--f);font-size:13px;line-height:1.5;min-height:100vh}
+h1{font-size:17px;font-weight:700}
+.header{background:var(--surf);border-bottom:1px solid var(--brd);padding:13px 18px;display:flex;align-items:center;gap:10px}
+.hbadge{background:var(--ac);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.5px}
+.nav{background:var(--surf);border-bottom:1px solid var(--brd);display:flex;overflow-x:auto}
+.nb{background:none;border:none;border-bottom:2px solid transparent;color:var(--mt);cursor:pointer;font-family:var(--f);font-size:11px;font-weight:600;letter-spacing:.5px;padding:11px 16px;white-space:nowrap;transition:all .2s}
+.nb:hover{color:var(--tx)}
+.nb.act{border-bottom-color:var(--ac);color:var(--ac)}
+.tab{display:none;padding:18px}
+.tab.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rad);padding:15px}
+.ct{color:var(--mt);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+label{color:var(--mt);font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:4px}
+input,select,textarea{background:var(--surf2);border:1px solid var(--brd);border-radius:var(--rad);color:var(--tx);font-family:var(--f);font-size:12px;padding:8px 11px;width:100%;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);outline:none}
+select option{background:var(--surf2)}
+textarea{min-height:70px;resize:vertical}
+.fi{margin-bottom:12px}
+.btn{background:var(--ac);border:none;border-radius:var(--rad);color:#fff;cursor:pointer;font-family:var(--f);font-size:11px;font-weight:700;letter-spacing:.5px;padding:9px 18px;transition:opacity .2s}
+.btn:hover{opacity:.83}
+.btn-g{background:var(--gr)}
+.btn-r{background:#2a1515;color:var(--rd);border:1px solid #3a2020}
+.btn-o{background:transparent;border:1px solid var(--brd);color:var(--mt)}
+.btn-o:hover{border-color:var(--tx);color:var(--tx);opacity:1}
+.btn-sm{font-size:10px;padding:5px 10px}
+.bdg{border-radius:20px;display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 8px;text-transform:uppercase}
+.b-ini{background:#1a2a4a;color:#4F8EF7;border:1px solid #2a3a5a}
+.b-and{background:#2a2010;color:#F5A623;border:1px solid #3a3020}
+.b-con{background:#0f2a1a;color:#34C77B;border:1px solid #1a3a28}
+.b-pen{background:#2a1515;color:#E84545;border:1px solid #3a2020}
+.b-pro{background:#2a1a3a;color:#A875F7;border:1px solid #3a2a4a}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{border-bottom:1px solid var(--brd);color:var(--mt);font-size:10px;font-weight:700;letter-spacing:.6px;padding:9px 11px;text-align:left;text-transform:uppercase}
+.tbl td{border-bottom:1px solid var(--brd);padding:9px 11px;vertical-align:middle;font-size:12px}
+.tbl tr:hover td{background:var(--surf2)}
+.tbl tr:last-child td{border-bottom:none}
+.kn{font-size:26px;font-weight:700;line-height:1.1;margin:3px 0}
+.kl{color:var(--mt);font-size:10px}
+.kb{background:var(--surf2);border-radius:4px;height:3px;margin-top:8px}
+.kf{border-radius:4px;height:3px;transition:width .5s}
+.cb{display:flex;flex-direction:column;gap:7px}
+.cr{display:flex;align-items:center;gap:9px}
+.cl{color:var(--mt);font-size:10px;width:85px;text-align:right;flex-shrink:0}
+.ct2{flex:1;background:var(--surf2);border-radius:4px;height:18px;overflow:hidden;position:relative}
+.cf{height:18px;border-radius:4px;display:flex;align-items:center;padding-left:7px;font-size:9px;font-weight:700;color:#fff;letter-spacing:.3px;transition:width .7s}
+.cv{font-size:10px;font-weight:600;width:22px;text-align:right;flex-shrink:0}
+.mb{background:var(--surf-bg);border-radius:var(--rad);border-left:3px solid var(--ac);padding:10px 13px;margin-bottom:8px;background:var(--surf2)}
+.tag{background:var(--surf2);border:1px solid var(--brd);border-radius:20px;display:inline-block;font-size:10px;padding:3px 9px;margin:2px;color:var(--mt)}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sec{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.alrt{border-radius:var(--rad);border:1px solid;margin-bottom:10px;padding:9px 13px;font-size:11px;display:flex;align-items:center;gap:7px}
+.alrt-ok{background:#0f2a1a;border-color:#1a4a2a;color:#34C77B}
+.alrt-er{background:#2a1010;border-color:#4a1a1a;color:#E84545}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center}
+.mbg.open{display:flex}
+.mdl{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:22px;width:92%;max-width:640px;max-height:90vh;overflow-y:auto}
+.mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.xb{background:none;border:none;color:var(--mt);cursor:pointer;font-size:17px}
+.chip{background:var(--surf2);border:1px solid var(--brd);border-radius:20px;cursor:pointer;font-family:var(--f);font-size:10px;font-weight:600;letter-spacing:.4px;padding:4px 12px;transition:all .2s;color:var(--mt)}
+.chip:hover,.chip.act{border-color:var(--ac);color:var(--ac);background:#0d1a33}
+.sep{border:none;border-top:1px solid var(--brd);margin:14px 0}
+.colr-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+@media(max-width:580px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="header">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4F8EF7" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
+  <h1>MANUT<span style="color:#4F8EF7">CTRL</span></h1>
+  <span class="hbadge">v2.0</span>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-sm" onclick="openModal('int')">+ Intervenção</button>
+    <button class="btn btn-sm btn-g" onclick="openModal('col')">+ Colaborador</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nb act" onclick="go('dashboard')">PAINEL</button>
+  <button class="nb" onclick="go('intervencoes')">INTERVENÇÕES</button>
+  <button class="nb" onclick="go('colaboradores')">COLABORADORES</button>
+  <button class="nb" onclick="go('tempo')">TEMPO</button>
+  <button class="nb" onclick="go('materiais')">MATERIAIS</button>
+  <button class="nb" onclick="go('indicadores')">INDICADORES</button>
+  <button class="nb" onclick="go('relatorio')">RELATÓRIO</button>
+</nav>
+
+<!-- PAINEL -->
+<div class="tab on" id="tab-dashboard">
+  <div id="alrt-area"></div>
+  <div class="g5" style="margin-bottom:16px" id="kpi-grid"></div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="card"><div class="ct">Status</div><div class="cb" id="ch-status"></div></div>
+    <div class="card"><div class="ct">Por tipo</div><div class="cb" id="ch-tipo"></div></div>
+    <div class="card"><div class="ct">Resumo de recursos</div><div id="res-resumo"></div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:13px 15px;border-bottom:1px solid var(--brd)"><span class="ct" style="margin:0">Intervenções recentes</span></div>
+    <table class="tbl" id="tbl-rec"></table>
+  </div>
+</div>
+
+<!-- INTERVENÇÕES -->
+<div class="tab" id="tab-intervencoes">
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="chip act" onclick="setF('todos',this)">TODOS</button>
+    <button class="chip" onclick="setF('iniciar',this)">INICIAR</button>
+    <button class="chip" onclick="setF('andamento',this)">EM ANDAMENTO</button>
+    <button class="chip" onclick="setF('pendente',this)">PENDENTE</button>
+    <button class="chip" onclick="setF('prorrogado',this)">PRORROGADO</button>
+    <button class="chip" onclick="setF('concluido',this)">CONCLUÍDO</button>
+    <input type="text" id="srch" placeholder="Buscar..." style="margin-left:auto;width:180px" onkeyup="rTbl()">
+  </div>
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table class="tbl" style="min-width:780px" id="tbl-full"></table>
+  </div>
+  <div style="margin-top:8px;color:var(--mt);font-size:10px" id="cnt-lbl"></div>
+</div>
+
+<!-- COLABORADORES -->
+<div class="tab" id="tab-colaboradores">
+  <div class="g2">
+    <div>
+      <div class="card">
+        <div class="ct">Cadastro de colaborador</div>
+        <div class="g2">
+          <div class="fi"><label>Nome completo *</label><input id="c-nome" placeholder="Ex: Carlos Mendes"></div>
+          <div class="fi"><label>Matrícula</label><input id="c-mat" placeholder="Ex: 0042"></div>
+        </div>
+        <div class="g2">
+          <div class="fi"><label>Cargo / Função *</label><input id="c-cargo" placeholder="Ex: Técnico de Manutenção"></div>
+          <div class="fi"><label>Área / Setor</label><input id="c-area" placeholder="Ex: Utilidades"></div>
+        </div>
+        <div class="g2">
+          <div class="fi"><label>Especialidade</label>
+            <select id="c-esp">
+              <option value="">Selecionar...</option>
+              <option>Mecânica</option><option>Elétrica</option><option>Hidráulica</option>
+              <option>Civil / Predial</option><option>Ferramentaria</option><option>Instrumentação</option><option>Geral</option>
+            </select>
+          </div>
+          <div class="fi"><label>Turno</label>
+            <select id="c-turno">
+              <option>Administrativo</option><option>1º Turno</option><option>2º Turno</option><option>3º Turno</option>
+            </select>
+          </div>
+        </div>
+        <div class="fi"><label>Contato / Ramal</label><input id="c-fone" placeholder="Ex: (11) 9 9999-0000 / Ramal 224"></div>
+        <div class="fi"><label>Observações</label><textarea id="c-obs" placeholder="Certificações, restrições, etc."></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" style="flex:1" onclick="saveCol()">Salvar colaborador</button>
+          <button class="btn btn-o" onclick="clearColForm()">Limpar</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between">
+          <span class="ct" style="margin:0">Colaboradores <span id="col-cnt" style="color:var(--ac)">0</span></span>
+          <input type="text" id="col-srch" placeholder="Buscar..." style="width:150px" onkeyup="rCols()">
+        </div>
+        <div id="col-list" style="max-height:520px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPO -->
+<div class="tab" id="tab-tempo">
+  <div class="g2">
+    <div>
+      <div class="card">
+        <div class="ct">Registrar tempo de intervenção</div>
+        <div class="fi"><label>Intervenção *</label><select id="t-int"></select></div>
+        <div class="fi"><label>Colaborador *</label><select id="t-col"></select></div>
+        <div class="g2">
+          <div class="fi"><label>Data *</label><input type="date" id="t-data"></div>
+          <div class="fi"><label>Horas gastas *</label><input type="number" id="t-horas" placeholder="Ex: 2.5" step="0.25" min="0.25"></div>
+        </div>
+        <div class="g2">
+          <div class="fi"><label>Hora início</label><input type="time" id="t-ini"></div>
+          <div class="fi"><label>Hora fim</label><input type="time" id="t-fim"></div>
+        </div>
+        <div class="fi"><label>Tipo de atividade</label>
+          <select id="t-tipo">
+            <option>Diagnóstico</option><option>Desmontagem</option><option>Substituição de peça</option>
+            <option>Montagem</option><option>Teste / Comissionamento</option><option>Preventiva</option><option>Limpeza / Organização</option><option>Outros</option>
+          </select>
+        </div>
+        <div class="fi"><label>Observações</label><textarea id="t-obs" placeholder="Detalhes da atividade realizada..." style="min-height:55px"></textarea></div>
+        <button class="btn" style="width:100%" onclick="saveTime()">Registrar tempo</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="g2">
+        <div class="card">
+          <div class="kl">Total de horas registradas</div>
+          <div class="kn" id="kpi-h-total" style="color:var(--ac)">0h</div>
+        </div>
+        <div class="card">
+          <div class="kl">Intervenções com apontamento</div>
+          <div class="kn" id="kpi-h-int" style="color:var(--gr)">0</div>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;flex:1">
+        <div style="padding:11px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between">
+          <span class="ct" style="margin:0">Registros de tempo</span>
+          <select id="t-filter-int" style="width:160px;font-size:10px;padding:5px 8px" onchange="rTempos()"><option value="">Todas as intervenções</option></select>
+        </div>
+        <div id="tempo-list" style="max-height:400px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MATERIAIS -->
+<div class="tab" id="tab-materiais">
+  <div class="g2">
+    <div>
+      <div class="card">
+        <div class="ct">Registrar uso de material</div>
+        <div class="fi"><label>Intervenção *</label><select id="m-int"></select></div>
+        <div class="fi"><label>Descrição do material *</label><input id="m-desc" placeholder="Ex: Correia V-belt B68, Rolamento 6205"></div>
+        <div class="g2">
+          <div class="fi"><label>Código / Ref.</label><input id="m-cod" placeholder="Ex: CV-B68"></div>
+          <div class="fi"><label>Categoria</label>
+            <select id="m-cat">
+              <option>Peça de reposição</option><option>Consumível</option><option>Lubrificante</option>
+              <option>Material elétrico</option><option>Material hidráulico</option><option>EPI</option>
+              <option>Material civil</option><option>Ferramenta (empréstimo)</option><option>Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="g3">
+          <div class="fi"><label>Quantidade *</label><input type="number" id="m-qtd" placeholder="1" min="0.01" step="0.01"></div>
+          <div class="fi"><label>Unidade</label>
+            <select id="m-und">
+              <option>un</option><option>kg</option><option>L</option><option>m</option><option>m²</option><option>pç</option><option>cx</option><option>rolo</option>
+            </select>
+          </div>
+          <div class="fi"><label>Custo unit. (R$)</label><input type="number" id="m-custo" placeholder="0.00" step="0.01" min="0"></div>
+        </div>
+        <div class="fi"><label>Fornecedor / Almoxarifado</label><input id="m-forn" placeholder="Ex: Almox. Manutenção"></div>
+        <div class="fi"><label>Observações</label><textarea id="m-obs" placeholder="Notas sobre o material..." style="min-height:50px"></textarea></div>
+        <button class="btn" style="width:100%" onclick="saveMat()">Registrar material</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="g3">
+        <div class="card">
+          <div class="kl">Itens registrados</div>
+          <div class="kn" id="kpi-m-itens" style="color:var(--ac)">0</div>
+        </div>
+        <div class="card">
+          <div class="kl">Custo total (R$)</div>
+          <div class="kn" id="kpi-m-custo" style="color:var(--am)">0,00</div>
+        </div>
+        <div class="card">
+          <div class="kl">Intervenções com mat.</div>
+          <div class="kn" id="kpi-m-int" style="color:var(--gr)">0</div>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;flex:1">
+        <div style="padding:11px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between">
+          <span class="ct" style="margin:0">Materiais utilizados</span>
+          <select id="m-filter-int" style="width:160px;font-size:10px;padding:5px 8px" onchange="rMats()"><option value="">Todas as intervenções</option></select>
+        </div>
+        <div id="mat-list" style="max-height:400px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INDICADORES -->
+<div class="tab" id="tab-indicadores">
+  <div class="g4" style="margin-bottom:14px" id="ind-kpis"></div>
+  <div class="g3">
+    <div class="card"><div class="ct">Horas por colaborador</div><div class="cb" id="ind-h-col"></div></div>
+    <div class="card"><div class="ct">Custo materiais por tipo</div><div class="cb" id="ind-m-tipo"></div></div>
+    <div class="card"><div class="ct">Top materiais mais usados</div><div class="cb" id="ind-m-top"></div></div>
+  </div>
+  <div class="g2" style="margin-top:13px">
+    <div class="card"><div class="ct">Horas por tipo de intervenção</div><div class="cb" id="ind-h-int"></div></div>
+    <div class="card"><div class="ct">Custo por intervenção (top 6)</div><div class="cb" id="ind-custo-int"></div></div>
+  </div>
+</div>
+
+<!-- RELATÓRIO -->
+<div class="tab" id="tab-relatorio">
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="ct">Filtros</div>
+      <div class="fi"><label>Período início</label><input type="date" id="r-ini"></div>
+      <div class="fi"><label>Período fim</label><input type="date" id="r-fim"></div>
+      <div class="fi"><label>Tipo manutenção</label>
+        <select id="r-tipo"><option value="">Todos</option>
+          <option>Predial</option><option>Máquinas</option><option>Elétrica</option><option>Ferramental</option><option>Preventiva</option><option>Corretiva</option>
+        </select>
+      </div>
+      <div class="fi"><label>Status</label>
+        <select id="r-st"><option value="">Todos</option>
+          <option value="iniciar">Iniciar</option><option value="andamento">Em Andamento</option>
+          <option value="concluido">Concluído</option><option value="pendente">Pendente</option><option value="prorrogado">Prorrogado</option>
+        </select>
+      </div>
+      <div class="fi"><label>Responsável</label><input id="r-resp" placeholder="Nome..."></div>
+      <div class="fi" style="display:flex;gap:8px">
+        <label style="display:flex;align-items:center;gap:5px;text-transform:none;font-size:11px;cursor:pointer"><input type="checkbox" id="r-inc-t" checked style="width:auto"> Incluir tempos</label>
+        <label style="display:flex;align-items:center;gap:5px;text-transform:none;font-size:11px;cursor:pointer"><input type="checkbox" id="r-inc-m" checked style="width:auto"> Incluir materiais</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Prévia consolidada</div>
+      <div id="r-prev" style="font-size:11px;color:var(--mt)">Configure os filtros e visualize.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" onclick="prevRel()">Visualizar prévia</button>
+    <button class="btn btn-g" onclick="dlRel('csv')">↓ CSV</button>
+    <button class="btn btn-g" onclick="dlRel('txt')">↓ TXT</button>
+    <button class="btn btn-o" onclick="dlRel('json')">↓ JSON</button>
+  </div>
+  <div id="r-tbl" style="margin-top:16px"></div>
+</div>
+
+<!-- MODAL INTERVENÇÃO -->
+<div class="mbg" id="modal-int">
+  <div class="mdl">
+    <div class="mhd"><h1 style="font-size:15px" id="m-int-title">Nova Intervenção</h1><button class="xb" onclick="closeModal('int')">✕</button></div>
+    <div class="g2">
+      <div class="fi"><label>Título *</label><input id="fi-tit" placeholder="Ex: Troca correia motor #3"></div>
+      <div class="fi"><label>Tipo *</label>
+        <select id="fi-tp"><option value="">Selecionar...</option>
+          <option>Predial</option><option>Máquinas</option><option>Elétrica</option><option>Ferramental</option><option>Preventiva</option><option>Corretiva</option><option>Hidráulica</option><option>Civil</option>
+        </select>
+      </div>
+    </div>
+    <div class="fi"><label>Descrição</label><textarea id="fi-dc" placeholder="Causa, sintoma, ação necessária..."></textarea></div>
+    <div class="g2">
+      <div class="fi"><label>Responsável *</label><select id="fi-rp"><option value="">Selecionar colaborador...</option></select></div>
+      <div class="fi"><label>Setor / Local</label><input id="fi-st" placeholder="Ex: Linha 2"></div>
+    </div>
+    <div class="g3">
+      <div class="fi"><label>Status *</label>
+        <select id="fi-s"><option value="iniciar">Iniciar</option><option value="andamento">Em andamento</option><option value="pendente">Pendente</option><option value="prorrogado">Prorrogado</option><option value="concluido">Concluído</option></select>
+      </div>
+      <div class="fi"><label>Data início</label><input type="date" id="fi-di"></div>
+      <div class="fi"><label>Prev. fim</label><input type="date" id="fi-df"></div>
+    </div>
+    <div class="fi"><label>Prioridade</label>
+      <select id="fi-pr"><option value="normal">Normal</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeModal('int')">Cancelar</button>
+      <button class="btn" onclick="saveInt()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COLABORADOR -->
+<div class="mbg" id="modal-col">
+  <div class="mdl" style="max-width:480px">
+    <div class="mhd"><h1 style="font-size:15px">Novo Colaborador</h1><button class="xb" onclick="closeModal('col')">✕</button></div>
+    <div class="g2">
+      <div class="fi"><label>Nome *</label><input id="mc-nm" placeholder="Nome completo"></div>
+      <div class="fi"><label>Matrícula</label><input id="mc-mt" placeholder="Ex: 0042"></div>
+    </div>
+    <div class="g2">
+      <div class="fi"><label>Cargo *</label><input id="mc-cg" placeholder="Ex: Técnico Mecânico"></div>
+      <div class="fi"><label>Especialidade</label>
+        <select id="mc-esp"><option value="">Selecionar...</option>
+          <option>Mecânica</option><option>Elétrica</option><option>Hidráulica</option><option>Civil / Predial</option><option>Ferramentaria</option><option>Instrumentação</option><option>Geral</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeModal('col')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveColModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const K='mctrl2';
+let DB=JSON.parse(localStorage.getItem(K+'_i')||'[]');
+let COLS=JSON.parse(localStorage.getItem(K+'_c')||'[]');
+let TIMES=JSON.parse(localStorage.getItem(K+'_t')||'[]');
+let MATS=JSON.parse(localStorage.getItem(K+'_m')||'[]');
+let editIntId=null,filt='todos';
+
+function sv(){
+  localStorage.setItem(K+'_i',JSON.stringify(DB));
+  localStorage.setItem(K+'_c',JSON.stringify(COLS));
+  localStorage.setItem(K+'_t',JSON.stringify(TIMES));
+  localStorage.setItem(K+'_m',JSON.stringify(MATS));
+}
+const SL={iniciar:'Iniciar',andamento:'Em Andamento',concluido:'Concluído',pendente:'Pendente',prorrogado:'Prorrogado'};
+const SC={iniciar:'#4F8EF7',andamento:'#F5A623',concluido:'#34C77B',pendente:'#E84545',prorrogado:'#A875F7'};
+const CC=['#4F8EF7','#34C77B','#F5A623','#A875F7','#E84545','#2DD4BF','#FF8C00','#C084FC'];
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function fd(d){if(!d)return'—';const p=d.split('-');return`${p[2]}/${p[1]}/${p[0]}`}
+function bdg(s){return`<span class="bdg b-${s.slice(0,3)}">${SL[s]||s}</span>`}
+function fmtH(h){return h%1===0?h+'h':`${Math.floor(h)}h${Math.round((h%1)*60)}min`}
+function fmtR(v){return(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function ini2(s){return s?s.substring(0,2).toUpperCase():'??'}
+function colColor(i){return CC[i%CC.length]}
+function showAlrt(msg,t){
+  const a=document.getElementById('alrt-area');
+  a.innerHTML=`<div class="alrt alrt-${t==='ok'?'ok':'er'}">${msg}</div>`;
+  setTimeout(()=>a.innerHTML='',3000);
+}
+
+function go(t){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('act'));
+  document.getElementById('tab-'+t).classList.add('on');
+  document.querySelectorAll('.nb').forEach(b=>{if(b.textContent.toLowerCase().includes(t.slice(0,4)))b.classList.add('act')});
+  if(t==='dashboard')rDash();
+  if(t==='intervencoes'){rTbl();populateSelects()}
+  if(t==='colaboradores')rCols();
+  if(t==='tempo'){populateSelects();rTempos();rKpiH()}
+  if(t==='materiais'){populateSelects();rMats();rKpiM()}
+  if(t==='indicadores')rInd();
+  if(t==='relatorio')setRelDates();
+}
+
+function populateSelects(){
+  const intOpts=DB.map(x=>`<option value="${x.id}">${x.titulo}</option>`).join('');
+  const colOpts=COLS.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+  ['t-int','m-int','t-filter-int','m-filter-int'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const prefix=id.includes('filter')?'<option value="">Todas as intervenções</option>':'';
+    el.innerHTML=prefix+intOpts;
+  });
+  const tc=document.getElementById('t-col');if(tc)tc.innerHTML=colOpts||'<option>Nenhum colaborador</option>';
+  const fir=document.getElementById('fi-rp');
+  if(fir)fir.innerHTML='<option value="">Selecionar colaborador...</option>'+colOpts;
+}
+
+// ─── MODAIS ─────────────────────────────────────────────────────
+function openModal(type,id){
+  if(type==='int'){
+    editIntId=id||null;
+    populateSelects();
+    if(id){
+      const x=DB.find(i=>i.id===id);
+      if(x){
+        document.getElementById('fi-tit').value=x.titulo;
+        document.getElementById('fi-tp').value=x.tipo;
+        document.getElementById('fi-dc').value=x.desc||'';
+        document.getElementById('fi-rp').value=x.resp_id||'';
+        document.getElementById('fi-st').value=x.setor||'';
+        document.getElementById('fi-s').value=x.status;
+        document.getElementById('fi-di').value=x.inicio||'';
+        document.getElementById('fi-df').value=x.fim||'';
+        document.getElementById('fi-pr').value=x.prioridade||'normal';
+        document.getElementById('m-int-title').textContent='Editar Intervenção';
+      }
+    }else{
+      ['fi-tit','fi-dc','fi-st','fi-di','fi-df'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
+      document.getElementById('fi-tp').value='';
+      document.getElementById('fi-s').value='iniciar';
+      document.getElementById('fi-pr').value='normal';
+      document.getElementById('fi-di').value=new Date().toISOString().slice(0,10);
+      document.getElementById('m-int-title').textContent='Nova Intervenção';
+    }
+    document.getElementById('modal-int').classList.add('open');
+  }else{
+    document.getElementById('modal-col').classList.add('open');
+  }
+}
+function closeModal(type){document.getElementById('modal-'+type).classList.remove('open')}
+
+// ─── INTERVENÇÕES ────────────────────────────────────────────────
+function saveInt(){
+  const t=document.getElementById('fi-tit').value.trim();
+  const tp=document.getElementById('fi-tp').value;
+  const s=document.getElementById('fi-s').value;
+  if(!t||!tp||!s){showAlrt('Preencha Título, Tipo e Status.','er');return}
+  const col=COLS.find(c=>c.id===document.getElementById('fi-rp').value);
+  const item={
+    id:editIntId||uid(),titulo:t,tipo:tp,desc:document.getElementById('fi-dc').value,
+    resp_id:col?col.id:'',resp:col?col.nome:document.getElementById('fi-rp').value||'—',
+    setor:document.getElementById('fi-st').value,status:s,
+    inicio:document.getElementById('fi-di').value,fim:document.getElementById('fi-df').value,
+    prioridade:document.getElementById('fi-pr').value,
+    createdAt:editIntId?(DB.find(x=>x.id===editIntId)||{}).createdAt||new Date().toISOString():new Date().toISOString()
+  };
+  if(editIntId){const i=DB.findIndex(x=>x.id===editIntId);DB[i]=item}else DB.unshift(item);
+  sv();closeModal('int');rDash();rTbl();
+  showAlrt(editIntId?'Intervenção atualizada!':'Intervenção cadastrada!','ok');editIntId=null;
+}
+function delInt(id){if(!confirm('Remover intervenção?'))return;DB=DB.filter(x=>x.id!==id);sv();rDash();rTbl()}
+function setF(f,b){filt=f;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('act'));b.classList.add('act');rTbl()}
+function rTbl(){
+  const q=(document.getElementById('srch')||{}).value||'';
+  let d=DB.filter(x=>(filt==='todos'||x.status===filt)&&(!q||x.titulo.toLowerCase().includes(q.toLowerCase())||x.resp.toLowerCase().includes(q.toLowerCase())));
+  document.getElementById('cnt-lbl').textContent=`${d.length} registro(s)`;
+  document.getElementById('tbl-full').innerHTML=`<thead><tr><th>#</th><th>Título</th><th>Tipo</th><th>Responsável</th><th>Status</th><th>Início</th><th>Prev. Fim</th><th>Horas</th><th>Custo Mat.</th><th></th></tr></thead>
+  <tbody>${d.map((x,i)=>{
+    const h=TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0);
+    const c=MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+    return`<tr><td style="color:var(--mt)">${i+1}</td>
+    <td><strong>${x.titulo}</strong>${x.prioridade==='urgente'?' <span style="color:var(--rd);font-size:9px">⚡URG</span>':x.prioridade==='alta'?' <span style="color:var(--am);font-size:9px">▲ALTA</span>':''}</td>
+    <td style="color:var(--mt)">${x.tipo}</td><td>${x.resp}</td><td>${bdg(x.status)}</td>
+    <td style="color:var(--mt)">${fd(x.inicio)}</td><td style="color:var(--mt)">${fd(x.fim)}</td>
+    <td style="color:var(--cy)">${h>0?fmtH(h):'—'}</td>
+    <td style="color:var(--am)">${c>0?'R$ '+fmtR(c):'—'}</td>
+    <td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openModal('int','${x.id}')">Ed.</button> <button class="btn btn-r btn-sm" onclick="delInt('${x.id}')">✕</button></td>
+    </tr>`}).join('')||'<tr><td colspan="10" style="text-align:center;color:var(--mt);padding:22px">Nenhum registro.</td></tr>'}</tbody>`;
+}
+
+// ─── COLABORADORES ───────────────────────────────────────────────
+function saveCol(){
+  const n=document.getElementById('c-nome').value.trim();
+  const cg=document.getElementById('c-cargo').value.trim();
+  if(!n||!cg){showAlrt('Informe Nome e Cargo.','er');return}
+  COLS.push({id:uid(),nome:n,mat:document.getElementById('c-mat').value,cargo:cg,area:document.getElementById('c-area').value,esp:document.getElementById('c-esp').value,turno:document.getElementById('c-turno').value,fone:document.getElementById('c-fone').value,obs:document.getElementById('c-obs').value,createdAt:new Date().toISOString()});
+  sv();clearColForm();rCols();showAlrt('Colaborador cadastrado!','ok');
+}
+function saveColModal(){
+  const n=document.getElementById('mc-nm').value.trim();
+  const cg=document.getElementById('mc-cg').value.trim();
+  if(!n||!cg){showAlrt('Informe Nome e Cargo.','er');return}
+  COLS.push({id:uid(),nome:n,mat:document.getElementById('mc-mt').value,cargo:cg,esp:document.getElementById('mc-esp').value,createdAt:new Date().toISOString()});
+  sv();closeModal('col');rCols();showAlrt('Colaborador cadastrado!','ok');
+}
+function clearColForm(){['c-nome','c-mat','c-cargo','c-area','c-fone','c-obs'].forEach(i=>document.getElementById(i).value='');document.getElementById('c-esp').value='';document.getElementById('c-turno').value='Administrativo'}
+function delCol(id){if(!confirm('Remover colaborador?'))return;COLS=COLS.filter(x=>x.id!==id);sv();rCols()}
+function rCols(){
+  const q=(document.getElementById('col-srch')||{}).value.toLowerCase()||'';
+  const d=COLS.filter(x=>!q||x.nome.toLowerCase().includes(q)||x.cargo.toLowerCase().includes(q));
+  document.getElementById('col-cnt').textContent=COLS.length;
+  document.getElementById('col-list').innerHTML=d.length?d.map((x,i)=>{
+    const h=TIMES.filter(t=>t.col_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0);
+    const ints=new Set(TIMES.filter(t=>t.col_id===x.id).map(t=>t.int_id)).size;
+    return`<div style="padding:12px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:12px">
+      <div class="avatar" style="background:${colColor(i)}22;color:${colColor(i)}">${ini2(x.nome)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:12px">${x.nome} ${x.mat?`<span style="color:var(--mt);font-size:10px">#${x.mat}</span>`:''}</div>
+        <div style="color:var(--mt);font-size:10px">${x.cargo}${x.area?' · '+x.area:''}${x.esp?' · '+x.esp:''}</div>
+        <div style="margin-top:4px"><span class="tag">${x.turno||'Administrativo'}</span>${h>0?`<span class="tag" style="color:var(--cy)">⏱ ${fmtH(h)}</span>`:''}${ints>0?`<span class="tag" style="color:var(--gr)">${ints} interv.</span>`:''}</div>
+      </div>
+      <button class="btn btn-r btn-sm" onclick="delCol('${x.id}')">✕</button>
+    </div>`}).join(''):'<div style="padding:20px;text-align:center;color:var(--mt);font-size:11px">Nenhum colaborador.</div>';
+}
+
+// ─── TEMPO ──────────────────────────────────────────────────────
+function saveTime(){
+  const iid=document.getElementById('t-int').value;
+  const cid=document.getElementById('t-col').value;
+  const h=parseFloat(document.getElementById('t-horas').value);
+  const dt=document.getElementById('t-data').value;
+  if(!iid||!cid||!h||h<=0||!dt){showAlrt('Preencha Intervenção, Colaborador, Data e Horas.','er');return}
+  const col=COLS.find(c=>c.id===cid);const int=DB.find(i=>i.id===iid);
+  TIMES.push({id:uid(),int_id:iid,int_titulo:int?int.titulo:'?',col_id:cid,col_nome:col?col.nome:'?',data:dt,horas:h,ini:document.getElementById('t-ini').value,fim:document.getElementById('t-fim').value,tipo:document.getElementById('t-tipo').value,obs:document.getElementById('t-obs').value,createdAt:new Date().toISOString()});
+  sv();['t-horas','t-ini','t-fim','t-obs'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('t-data').value=new Date().toISOString().slice(0,10);
+  rTempos();rKpiH();showAlrt('Tempo registrado!','ok');
+}
+function delTime(id){if(!confirm('Remover registro?'))return;TIMES=TIMES.filter(x=>x.id!==id);sv();rTempos();rKpiH()}
+function rKpiH(){
+  const tot=TIMES.reduce((s,t)=>s+parseFloat(t.horas||0),0);
+  const ints=new Set(TIMES.map(t=>t.int_id)).size;
+  document.getElementById('kpi-h-total').textContent=fmtH(tot);
+  document.getElementById('kpi-h-int').textContent=ints;
+}
+function rTempos(){
+  const fi=document.getElementById('t-filter-int')?document.getElementById('t-filter-int').value:'';
+  const tf=document.getElementById('t-filter-int');
+  if(tf){const opts=DB.map(x=>`<option value="${x.id}">${x.titulo}</option>`).join('');tf.innerHTML='<option value="">Todas as intervenções</option>'+opts;if(fi)tf.value=fi}
+  const d=TIMES.filter(t=>!fi||t.int_id===fi).sort((a,b)=>b.data.localeCompare(a.data));
+  document.getElementById('tempo-list').innerHTML=d.length?d.map(t=>`
+    <div style="padding:10px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-start;gap:10px">
+      <div style="background:#0d2233;color:var(--cy);border-radius:var(--rad);padding:7px 10px;text-align:center;flex-shrink:0;min-width:48px">
+        <div style="font-size:14px;font-weight:700">${fmtH(parseFloat(t.horas))}</div>
+        <div style="font-size:9px;color:var(--mt)">horas</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:11px">${t.int_titulo}</div>
+        <div style="color:var(--mt);font-size:10px">${t.col_nome} · ${fd(t.data)}${t.ini?' · '+t.ini+' → '+t.fim:''}</div>
+        <div style="color:var(--mt);font-size:10px">${t.tipo}${t.obs?' — '+t.obs:''}</div>
+      </div>
+      <button class="btn btn-r btn-sm" onclick="delTime('${t.id}')">✕</button>
+    </div>`).join(''):'<div style="padding:20px;text-align:center;color:var(--mt);font-size:11px">Nenhum registro de tempo.</div>';
+}
+
+// ─── MATERIAIS ──────────────────────────────────────────────────
+function saveMat(){
+  const iid=document.getElementById('m-int').value;
+  const desc=document.getElementById('m-desc').value.trim();
+  const qtd=parseFloat(document.getElementById('m-qtd').value);
+  if(!iid||!desc||!qtd||qtd<=0){showAlrt('Preencha Intervenção, Descrição e Quantidade.','er');return}
+  const int=DB.find(i=>i.id===iid);
+  MATS.push({id:uid(),int_id:iid,int_titulo:int?int.titulo:'?',desc,cod:document.getElementById('m-cod').value,cat:document.getElementById('m-cat').value,qtd,und:document.getElementById('m-und').value,custo:parseFloat(document.getElementById('m-custo').value)||0,forn:document.getElementById('m-forn').value,obs:document.getElementById('m-obs').value,createdAt:new Date().toISOString()});
+  sv();['m-desc','m-cod','m-qtd','m-forn','m-obs'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('m-custo').value='';
+  rMats();rKpiM();showAlrt('Material registrado!','ok');
+}
+function delMat(id){if(!confirm('Remover material?'))return;MATS=MATS.filter(x=>x.id!==id);sv();rMats();rKpiM()}
+function rKpiM(){
+  const tot=MATS.reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+  const ints=new Set(MATS.map(m=>m.int_id)).size;
+  document.getElementById('kpi-m-itens').textContent=MATS.length;
+  document.getElementById('kpi-m-custo').textContent=fmtR(tot);
+  document.getElementById('kpi-m-int').textContent=ints;
+}
+function rMats(){
+  const fi=document.getElementById('m-filter-int')?document.getElementById('m-filter-int').value:'';
+  const mf=document.getElementById('m-filter-int');
+  if(mf){const opts=DB.map(x=>`<option value="${x.id}">${x.titulo}</option>`).join('');mf.innerHTML='<option value="">Todas as intervenções</option>'+opts;if(fi)mf.value=fi}
+  const d=MATS.filter(m=>!fi||m.int_id===fi);
+  document.getElementById('mat-list').innerHTML=d.length?d.map(m=>{
+    const total=parseFloat(m.qtd||0)*parseFloat(m.custo||0);
+    return`<div style="padding:10px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-start;gap:10px">
+      <div style="background:#1a1a0a;color:var(--am);border-radius:var(--rad);padding:7px 10px;text-align:center;flex-shrink:0;min-width:48px">
+        <div style="font-size:13px;font-weight:700">${m.qtd}</div>
+        <div style="font-size:9px;color:var(--mt)">${m.und}</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:11px">${m.desc}${m.cod?` <span style="color:var(--mt);font-size:9px">[${m.cod}]</span>`:''}</div>
+        <div style="color:var(--mt);font-size:10px">${m.int_titulo} · ${m.cat}</div>
+        <div style="font-size:10px;margin-top:2px">${m.forn?`<span style="color:var(--mt)">${m.forn}</span>`:''} ${total>0?`<span style="color:var(--am);font-weight:700">R$ ${fmtR(total)}</span>`:''}</div>
+      </div>
+      <button class="btn btn-r btn-sm" onclick="delMat('${m.id}')">✕</button>
+    </div>`}).join(''):'<div style="padding:20px;text-align:center;color:var(--mt);font-size:11px">Nenhum material registrado.</div>';
+}
+
+// ─── DASHBOARD ──────────────────────────────────────────────────
+function rDash(){
+  const tot=DB.length;
+  const cs={iniciar:0,andamento:0,concluido:0,pendente:0,prorrogado:0};
+  DB.forEach(x=>cs[x.status]=(cs[x.status]||0)+1);
+  const hTot=TIMES.reduce((s,t)=>s+parseFloat(t.horas||0),0);
+  const mCusto=MATS.reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+  document.getElementById('kpi-grid').innerHTML=[
+    {l:'Total',v:tot,c:'#4F8EF7',pct:100},
+    {l:'Em andamento',v:cs.andamento,c:'#F5A623',pct:tot?Math.round(cs.andamento/tot*100):0},
+    {l:'Pendente',v:cs.pendente,c:'#E84545',pct:tot?Math.round(cs.pendente/tot*100):0},
+    {l:'Concluído',v:cs.concluido,c:'#34C77B',pct:tot?Math.round(cs.concluido/tot*100):0},
+    {l:'Colaboradores',v:COLS.length,c:'#A875F7',pct:100},
+  ].map(k=>`<div class="card"><div class="kl">${k.l}</div><div class="kn" style="color:${k.c}">${k.v}</div><div class="kb"><div class="kf" style="width:${k.pct}%;background:${k.c}"></div></div></div>`).join('');
+
+  const ord=['andamento','pendente','prorrogado','iniciar','concluido'];
+  document.getElementById('ch-status').innerHTML=ord.map(s=>{const v=cs[s]||0;const p=tot?Math.round(v/tot*100):0;return`<div class="cr"><div class="cl">${SL[s]}</div><div class="ct2"><div class="cf" style="width:${p}%;background:${SC[s]}">${p>12?p+'%':''}</div></div><div class="cv" style="color:${SC[s]}">${v}</div></div>`}).join('');
+
+  const tipos={};DB.forEach(x=>tipos[x.tipo]=(tipos[x.tipo]||0)+1);
+  const ta=Object.entries(tipos).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('ch-tipo').innerHTML=ta.length?ta.map(([t,v],i)=>{const p=tot?Math.round(v/tot*100):0;return`<div class="cr"><div class="cl">${t}</div><div class="ct2"><div class="cf" style="width:${p}%;background:${CC[i%CC.length]}">${p>12?p+'%':''}</div></div><div class="cv" style="color:${CC[i%CC.length]}">${v}</div></div>`}).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+
+  document.getElementById('res-resumo').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--surf2);border-radius:var(--rad)"><span style="color:var(--mt);font-size:11px">Horas registradas</span><span style="color:var(--cy);font-weight:700">${fmtH(hTot)}</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--surf2);border-radius:var(--rad)"><span style="color:var(--mt);font-size:11px">Custo c/ materiais</span><span style="color:var(--am);font-weight:700">R$ ${fmtR(mCusto)}</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--surf2);border-radius:var(--rad)"><span style="color:var(--mt);font-size:11px">Itens de material</span><span style="color:var(--gr);font-weight:700">${MATS.length} itens</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--surf2);border-radius:var(--rad)"><span style="color:var(--mt);font-size:11px">Apontamentos de tempo</span><span style="color:var(--pu);font-weight:700">${TIMES.length} reg.</span></div>
+    </div>`;
+
+  const rec=DB.slice(0,5);
+  document.getElementById('tbl-rec').innerHTML=`<thead><tr><th>Título</th><th>Tipo</th><th>Resp.</th><th>Status</th><th>Horas</th><th>Custo</th></tr></thead>
+  <tbody>${rec.map(x=>{
+    const h=TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0);
+    const c=MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+    return`<tr><td>${x.titulo}</td><td style="color:var(--mt)">${x.tipo}</td><td>${x.resp}</td><td>${bdg(x.status)}</td><td style="color:var(--cy)">${h>0?fmtH(h):'—'}</td><td style="color:var(--am)">${c>0?'R$ '+fmtR(c):'—'}</td></tr>`}).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--mt);padding:20px">Nenhuma intervenção.</td></tr>'}</tbody>`;
+}
+
+// ─── INDICADORES ────────────────────────────────────────────────
+function rInd(){
+  const tot=DB.length;
+  const conc=DB.filter(x=>x.status==='concluido').length;
+  const hTot=TIMES.reduce((s,t)=>s+parseFloat(t.horas||0),0);
+  const mCusto=MATS.reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+  const taxa=tot?Math.round(conc/tot*100):0;
+  document.getElementById('ind-kpis').innerHTML=[
+    {l:'Taxa de conclusão',v:`${taxa}%`,c:'#34C77B'},
+    {l:'Total de horas',v:fmtH(hTot),c:'#2DD4BF'},
+    {l:'Custo total R$',v:fmtR(mCusto),c:'#F5A623'},
+    {l:'Colaboradores ativos',v:COLS.length,c:'#A875F7'},
+  ].map(k=>`<div class="card"><div class="kl">${k.l}</div><div class="kn" style="color:${k.c};font-size:20px">${k.v}</div></div>`).join('');
+
+  const hCol={};TIMES.forEach(t=>{hCol[t.col_nome]=(hCol[t.col_nome]||0)+parseFloat(t.horas||0)});
+  const hca=Object.entries(hCol).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const mxH=hca[0]?hca[0][1]:1;
+  document.getElementById('ind-h-col').innerHTML=hca.length?hca.map(([n,h],i)=>`<div class="cr"><div class="cl" style="font-size:9px">${n.split(' ')[0]}</div><div class="ct2"><div class="cf" style="width:${Math.round(h/mxH*100)}%;background:${CC[i%CC.length]}">${fmtH(h)}</div></div><div class="cv" style="color:${CC[i%CC.length]};font-size:9px">${fmtH(h)}</div></div>`).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+
+  const mTipo={};MATS.forEach(m=>{const c=parseFloat(m.qtd||0)*parseFloat(m.custo||0);mTipo[m.cat]=(mTipo[m.cat]||0)+c});
+  const mta=Object.entries(mTipo).sort((a,b)=>b[1]-a[1]).slice(0,6);const mxM=mta[0]?mta[0][1]:1;
+  document.getElementById('ind-m-tipo').innerHTML=mta.length?mta.map(([c,v],i)=>`<div class="cr"><div class="cl" style="font-size:9px">${c.split(' ')[0]}</div><div class="ct2"><div class="cf" style="width:${Math.round(v/mxM*100)}%;background:${CC[i%CC.length]}">R$${Math.round(v)}</div></div><div class="cv" style="color:${CC[i%CC.length]};font-size:9px">R$${Math.round(v)}</div></div>`).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+
+  const mTop={};MATS.forEach(m=>{mTop[m.desc]=(mTop[m.desc]||0)+parseFloat(m.qtd||0)});
+  const mta2=Object.entries(mTop).sort((a,b)=>b[1]-a[1]).slice(0,6);const mxM2=mta2[0]?mta2[0][1]:1;
+  document.getElementById('ind-m-top').innerHTML=mta2.length?mta2.map(([d,q],i)=>`<div class="cr"><div class="cl" style="font-size:9px">${d.slice(0,12)}</div><div class="ct2"><div class="cf" style="width:${Math.round(q/mxM2*100)}%;background:${CC[i%CC.length]}">${q}</div></div><div class="cv" style="color:${CC[i%CC.length]};font-size:9px">${q}</div></div>`).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+
+  const hInt={};TIMES.forEach(t=>{const x=DB.find(i=>i.id===t.int_id);if(x)hInt[x.tipo]=(hInt[x.tipo]||0)+parseFloat(t.horas||0)});
+  const hia=Object.entries(hInt).sort((a,b)=>b[1]-a[1]);const mxHi=hia[0]?hia[0][1]:1;
+  document.getElementById('ind-h-int').innerHTML=hia.length?hia.map(([t,h],i)=>`<div class="cr"><div class="cl">${t}</div><div class="ct2"><div class="cf" style="width:${Math.round(h/mxHi*100)}%;background:${CC[i%CC.length]}">${fmtH(h)}</div></div><div class="cv" style="color:${CC[i%CC.length]}">${fmtH(h)}</div></div>`).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+
+  const cInt={};MATS.forEach(m=>{const c=parseFloat(m.qtd||0)*parseFloat(m.custo||0);cInt[m.int_titulo]=(cInt[m.int_titulo]||0)+c});
+  const cia=Object.entries(cInt).sort((a,b)=>b[1]-a[1]).slice(0,6);const mxC=cia[0]?cia[0][1]:1;
+  document.getElementById('ind-custo-int').innerHTML=cia.length?cia.map(([n,c],i)=>`<div class="cr"><div class="cl" style="font-size:9px">${n.slice(0,12)}</div><div class="ct2"><div class="cf" style="width:${Math.round(c/mxC*100)}%;background:${CC[i%CC.length]}">R$${Math.round(c)}</div></div><div class="cv" style="color:${CC[i%CC.length]};font-size:9px">R$${Math.round(c)}</div></div>`).join(''):'<div style="color:var(--mt);font-size:11px">Sem dados.</div>';
+}
+
+// ─── RELATÓRIO ──────────────────────────────────────────────────
+function setRelDates(){const t=new Date();const m=String(t.getMonth()+1).padStart(2,'0');document.getElementById('r-ini').value=`${t.getFullYear()}-${m}-01`;document.getElementById('r-fim').value=t.toISOString().slice(0,10)}
+function getRelData(){
+  const s=document.getElementById('r-ini').value,e=document.getElementById('r-fim').value;
+  const tp=document.getElementById('r-tipo').value,st=document.getElementById('r-st').value,rp=document.getElementById('r-resp').value.toLowerCase();
+  return DB.filter(x=>{
+    if(tp&&x.tipo!==tp)return false;if(st&&x.status!==st)return false;
+    if(rp&&!x.resp.toLowerCase().includes(rp))return false;
+    if(s&&x.inicio&&x.inicio<s)return false;if(e&&x.inicio&&x.inicio>e)return false;
+    return true;
+  });
+}
+function prevRel(){
+  const d=getRelData();const cs={};d.forEach(x=>cs[x.status]=(cs[x.status]||0)+1);
+  const hTot=d.reduce((s,x)=>s+TIMES.filter(t=>t.int_id===x.id).reduce((a,t)=>a+parseFloat(t.horas||0),0),0);
+  const mTot=d.reduce((s,x)=>s+MATS.filter(m=>m.int_id===x.id).reduce((a,m)=>a+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0),0);
+  document.getElementById('r-prev').innerHTML=`<div style="display:flex;flex-direction:column;gap:7px">
+    <div><strong style="color:var(--ac)">${d.length}</strong> intervenções</div>
+    ${Object.entries(cs).map(([s,v])=>`<div>${bdg(s)} <strong>${v}</strong></div>`).join('')}
+    <div style="margin-top:4px;padding-top:8px;border-top:1px solid var(--brd)">Horas totais: <strong style="color:var(--cy)">${fmtH(hTot)}</strong></div>
+    <div>Custo materiais: <strong style="color:var(--am)">R$ ${fmtR(mTot)}</strong></div>
+  </div>`;
+  const incT=document.getElementById('r-inc-t').checked;
+  const incM=document.getElementById('r-inc-m').checked;
+  document.getElementById('r-tbl').innerHTML=`<div class="card" style="padding:0;overflow-x:auto">
+    <table class="tbl" style="min-width:700px">
+      <thead><tr><th>Título</th><th>Tipo</th><th>Responsável</th><th>Status</th><th>Início</th><th>Prev. Fim</th>${incT?'<th>Horas</th>':''}${incM?'<th>Custo Mat.</th>':''}</tr></thead>
+      <tbody>${d.map(x=>{
+        const h=incT?TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0):0;
+        const c=incM?MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0):0;
+        return`<tr><td>${x.titulo}</td><td style="color:var(--mt)">${x.tipo}</td><td>${x.resp}</td><td>${bdg(x.status)}</td><td style="color:var(--mt)">${fd(x.inicio)}</td><td style="color:var(--mt)">${fd(x.fim)}</td>${incT?`<td style="color:var(--cy)">${h>0?fmtH(h):'—'}</td>`:''}${incM?`<td style="color:var(--am)">${c>0?'R$ '+fmtR(c):'—'}</td>`:''}</tr>`}).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--mt);padding:20px">Nenhum registro.</td></tr>'}</tbody>
+    </table></div>`;
+}
+function dlRel(fmt){
+  const d=getRelData();const today=new Date().toLocaleDateString('pt-BR');
+  const incT=document.getElementById('r-inc-t').checked;const incM=document.getElementById('r-inc-m').checked;
+  let content,mime,ext;
+  if(fmt==='csv'){
+    const hdr=['Título','Tipo','Responsável','Setor','Status','Início','Prev.Fim','Prioridade',incT?'Horas':'',incM?'Custo_Mat_R$':''].filter(Boolean).join(';')+'\n';
+    const rows=d.map(x=>{
+      const h=incT?TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0):null;
+      const c=incM?MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0):null;
+      return[x.titulo,x.tipo,x.resp,x.setor||'',SL[x.status],fd(x.inicio),fd(x.fim),x.prioridade||'normal',incT?fmtH(h):'',incM?fmtR(c):''].filter((_,i)=>i<8||(i===8&&incT)||(i===9&&incM)).join(';')}).join('\n');
+    content='\uFEFF'+hdr+rows;mime='text/csv';ext='csv';
+  }else if(fmt==='txt'){
+    const sep='─'.repeat(60)+'\n';
+    content=`RELATÓRIO DE MANUTENÇÃO — MANUTCTRL v2\nGerado em: ${today}\nRegistros: ${d.length}\n${sep}`;
+    d.forEach((x,i)=>{
+      const h=TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0);
+      const c=MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0);
+      content+=`[${i+1}] ${x.titulo}\n  Tipo: ${x.tipo} | Status: ${SL[x.status]} | Prio: ${x.prioridade||'normal'}\n  Resp: ${x.resp} | Setor: ${x.setor||'—'}\n  Início: ${fd(x.inicio)} | Prev. Fim: ${fd(x.fim)}\n`;
+      if(incT&&h>0)content+=`  ⏱ Horas: ${fmtH(h)}\n`;
+      if(incM&&c>0)content+=`  💰 Custo Mat: R$ ${fmtR(c)}\n`;
+      if(x.desc)content+=`  Desc: ${x.desc}\n`;
+      content+='\n';
+    });
+  }else{
+    const data=d.map(x=>({...x,status_label:SL[x.status],horas_gastas:TIMES.filter(t=>t.int_id===x.id).reduce((s,t)=>s+parseFloat(t.horas||0),0),custo_materiais:MATS.filter(m=>m.int_id===x.id).reduce((s,m)=>s+(parseFloat(m.qtd||0)*parseFloat(m.custo||0)),0),materiais:MATS.filter(m=>m.int_id===x.id),registros_tempo:TIMES.filter(t=>t.int_id===x.id)}));
+    content=JSON.stringify({gerado:today,total:d.length,colaboradores:COLS,dados:data},null,2);
+    mime='application/json';ext='json';
+  }
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=`manutctrl_${new Date().toISOString().slice(0,10)}.${ext}`;a.click();
+}
+
+// ─── SEED ────────────────────────────────────────────────────────
+function seed(){
+  if(DB.length||COLS.length)return;
+  COLS=[
+    {id:'c1',nome:'Carlos Mendes',mat:'0041',cargo:'Técnico Mecânico',area:'Produção',esp:'Mecânica',turno:'1º Turno',fone:'Ramal 220',obs:'',createdAt:''},
+    {id:'c2',nome:'Ana Lima',mat:'0042',cargo:'Técnica Elétrica',area:'Utilidades',esp:'Elétrica',turno:'Administrativo',fone:'Ramal 221',obs:'NR10 atualizado',createdAt:''},
+    {id:'c3',nome:'Marcos Freitas',mat:'0043',cargo:'Técnico Hidráulico',area:'Linha 2',esp:'Hidráulica',turno:'2º Turno',fone:'Ramal 222',obs:'',createdAt:''},
+    {id:'c4',nome:'Roberto Silva',mat:'0044',cargo:'Técnico Predial',area:'Infraestrutura',esp:'Civil / Predial',turno:'Administrativo',fone:'Ramal 223',obs:'',createdAt:''},
+  ];
+  DB=[
+    {id:'i1',titulo:'Substituição de correia transportadora',tipo:'Máquinas',desc:'Desgaste excessivo lateral',resp_id:'c1',resp:'Carlos Mendes',setor:'Linha 1',status:'andamento',inicio:'2025-04-10',fim:'2025-04-18',prioridade:'alta',createdAt:''},
+    {id:'i2',titulo:'Revisão painel elétrico compressores',tipo:'Elétrica',desc:'Disjuntor C60 aquecendo',resp_id:'c2',resp:'Ana Lima',setor:'Utilidades',status:'pendente',inicio:'2025-04-05',fim:'2025-04-20',prioridade:'urgente',createdAt:''},
+    {id:'i3',titulo:'Pintura fachada armazém 3',tipo:'Predial',desc:'',resp_id:'c4',resp:'Roberto Silva',setor:'Externo',status:'concluido',inicio:'2025-03-20',fim:'2025-03-28',prioridade:'normal',createdAt:''},
+    {id:'i4',titulo:'Calibração torno CNC #07',tipo:'Máquinas',desc:'',resp_id:'c1',resp:'Carlos Mendes',setor:'Usinagem',status:'iniciar',inicio:'2025-04-15',fim:'2025-04-22',prioridade:'normal',createdAt:''},
+    {id:'i5',titulo:'Reparo tubulação água gelada',tipo:'Hidráulica',desc:'Aguardando peça',resp_id:'c3',resp:'Marcos Freitas',setor:'Produção',status:'prorrogado',inicio:'2025-04-01',fim:'2025-04-30',prioridade:'alta',createdAt:''},
+  ];
+  TIMES=[
+    {id:'t1',int_id:'i1',int_titulo:'Substituição de correia transportadora',col_id:'c1',col_nome:'Carlos Mendes',data:'2025-04-10',horas:2.5,ini:'08:00',fim:'10:30',tipo:'Diagnóstico',obs:'Identificado desgaste na borda lateral',createdAt:''},
+    {id:'t2',int_id:'i1',int_titulo:'Substituição de correia transportadora',col_id:'c1',col_nome:'Carlos Mendes',data:'2025-04-11',horas:4,ini:'07:00',fim:'11:00',tipo:'Substituição de peça',obs:'',createdAt:''},
+    {id:'t3',int_id:'i2',int_titulo:'Revisão painel elétrico compressores',col_id:'c2',col_nome:'Ana Lima',data:'2025-04-05',horas:3,ini:'09:00',fim:'12:00',tipo:'Diagnóstico',obs:'Medição de temperatura',createdAt:''},
+    {id:'t4',int_id:'i3',int_titulo:'Pintura fachada armazém 3',col_id:'c4',col_nome:'Roberto Silva',data:'2025-03-20',horas:8,ini:'07:00',fim:'15:00',tipo:'Outros',obs:'',createdAt:''},
+    {id:'t5',int_id:'i5',int_titulo:'Reparo tubulação água gelada',col_id:'c3',col_nome:'Marcos Freitas',data:'2025-04-01',horas:2,ini:'14:00',fim:'16:00',tipo:'Diagnóstico',obs:'Localizado o ponto de vazamento',createdAt:''},
+  ];
+  MATS=[
+    {id:'m1',int_id:'i1',int_titulo:'Substituição de correia transportadora',desc:'Correia V-belt B68',cod:'CVB-68',cat:'Peça de reposição',qtd:2,und:'un',custo:85,forn:'Almox. Manutenção',obs:'',createdAt:''},
+    {id:'m2',int_id:'i1',int_titulo:'Substituição de correia transportadora',desc:'Graxa Mobilgrease HP 222',cod:'GR-HP222',cat:'Lubrificante',qtd:0.5,und:'kg',custo:32,forn:'Almox. Manutenção',obs:'',createdAt:''},
+    {id:'m3',int_id:'i2',int_titulo:'Revisão painel elétrico compressores',desc:'Disjuntor C60N 20A',cod:'DCZ-20',cat:'Material elétrico',qtd:1,und:'un',custo:145,forn:'Estoque Elétrica',obs:'',createdAt:''},
+    {id:'m4',int_id:'i3',int_titulo:'Pintura fachada armazém 3',desc:'Tinta látex acrílica branco',cod:'',cat:'Material civil',qtd:18,und:'L',custo:22,forn:'Fornecedor Externo',obs:'',createdAt:''},
+    {id:'m5',int_id:'i5',int_titulo:'Reparo tubulação água gelada',desc:'Abraçadeira inox 2"',cod:'AI-50',cat:'Material hidráulico',qtd:4,und:'un',custo:18,forn:'Almox. Manutenção',obs:'',createdAt:''},
+  ];
+  sv();
+}
+seed();
+rDash();
+</script>
